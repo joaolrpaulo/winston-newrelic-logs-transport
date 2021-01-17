@@ -1,0 +1,24 @@
+{
+  "name": "winston-newrelic-logs-transport",
+  "version": "1.0.0",
+  "description": "NewRelic Logs API Transport for Winston",
+  "main": "dist/index.js",
+  "author": "João Paulo <joaolrpaulo@gmail.com>",
+  "license": "MIT",
+  "type": "commonjs",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/triple-beam": "^1.3.2",
+    "axios": "^0.21.1",
+    "newrelic": "^7.1.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.1.3",
+    "winston": "^3.0.0",
+    "winston-transport": "^4.2.0"
+  }
+}
