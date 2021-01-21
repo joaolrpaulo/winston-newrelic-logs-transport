@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "NewRelic Logs API Transport for Winston",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "João Paulo <joaolrpaulo@gmail.com>",
   "license": "MIT",
   "type": "commonjs",
   "private": false,
   "scripts": {
     "build": "tsc",
+    "prepublish": "tsc",
     "start": "tsc && node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
