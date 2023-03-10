@@ -1,6 +1,6 @@
 # winston-newrelic-logs-transport
 
-A [newrelic][http://newrelic.com/] Logs API transport for [winston][https://github.com/flatiron/winston].
+A [newrelic](http://newrelic.com/) Logs API transport for [winston](https://github.com/flatiron/winston).
 
 ## Installation
 
