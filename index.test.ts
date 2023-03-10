@@ -18,11 +18,7 @@ beforeAll(() => {
   mockPost.mockImplementation(
     () =>
       new Promise<void>((resolve) => {
-        console.log("resolving");
-
         setImmediate(() => {
-          console.log("resolved");
-
           resolve();
         });
       })
