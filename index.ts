@@ -32,7 +32,7 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
     });
   }
 
-  log(info: { [x in symbol]: string }, callback: (error?: Error) => void) {
+  log(info: { [x in symbol]: string }, callback: (error?: Error | null) => void) {
     // The implementation of log callbacks isn't documented and the exported type
     // definitions appear to be wrong too. This implementation has been compied
     // https://github.com/winstonjs/winston-mongodb/blob/master/lib/winston-mongodb.js#L229-L235
