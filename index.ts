@@ -97,15 +97,19 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
 
   private batchPost() {
     try {
-      const toSend = this.logs.slice();
+      const logs = this.logs.slice();
       this.logs = [];
 
+      const data = [
+        {
+          logs,
+        },
+      ];
+
       this.axiosClient
-        .post("/log/v1", {
-          logs: toSend,
-        })
+        .post("/log/v1", data)
         .then(() => {
-          for (const log of toSend) {
+          for (const log of logs) {
             this.emit("logged", log);
           }
         })

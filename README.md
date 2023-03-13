@@ -27,3 +27,10 @@ const logger = createLogger({
 ## Options
 * __licenseKey__: New Relic license key.
 * __apiUrl__: New Relic Log Base API URL.
+* __axiosOptions__: Options passed to Axios when sending data. (Optional)
+* __batchSize__:  How many log items you would like to bundle together before posting to loggly. (Optional, positive integer or true, default 100)
+* __batchThrottle__: The maximum frequency the batch posting should occur unless the batch size is exceeded. (Optional, positive integer or true, default 1000)
+
+### Batching
+
+If either batching option is set without the other, or simply set as `true` then default values are used as specified. 
