@@ -8,7 +8,8 @@ export default defineConfig({
     clearMocks: true,
     exclude: [
       // Comment if you want to run the integration tests.
-      '**/*.integration.test.*'
+      '**/*.integration.test.*',
+      'dist/**/*'
     ]
   },
 });
