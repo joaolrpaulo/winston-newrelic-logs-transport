@@ -2,7 +2,7 @@ import WinstonNewrelicLogsTransport, {
   defaultBatchSize,
   defaultBatchThrottle,
 } from "index";
-import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { LEVEL, MESSAGE } from "triple-beam";
 import axios, { AxiosInstance } from "axios";
 
@@ -145,7 +145,10 @@ describe("batch mode", () => {
     const cb = vi.fn();
 
     for (let i = 0; i < 4; i++) {
-      transport.log({ [MESSAGE]: `Some message ${i + 1}`, [LEVEL]: "info" }, cb);
+      transport.log(
+        { [MESSAGE]: `Some message ${i + 1}`, [LEVEL]: "info" },
+        cb
+      );
     }
 
     expect(mockPost).not.toHaveBeenCalledTimes(1);
@@ -187,13 +190,16 @@ describe("batch mode", () => {
       apiUrl: "logs.foo.com",
       licenseKey: "000000",
       batchThrottle: true,
-      batchSize: 3
+      batchSize: 3,
     });
 
     const cb = vi.fn();
 
     for (let i = 0; i < 5; i++) {
-      transport.log({ [MESSAGE]: `Some message ${i + 1}`, [LEVEL]: "info" }, cb);
+      transport.log(
+        { [MESSAGE]: `Some message ${i + 1}`, [LEVEL]: "info" },
+        cb
+      );
     }
 
     expect(mockPost).toHaveBeenCalledTimes(1);
