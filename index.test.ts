@@ -159,30 +159,32 @@ describe("batch mode", () => {
     await vi.advanceTimersByTimeAsync(1000);
 
     expect(mockPost).toHaveBeenCalledTimes(1);
-    expect(mockPost).toHaveBeenCalledWith("/log/v1", {
-      logs: [
-        {
-          logtype: "info",
-          message: "Some message 1",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 2",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 3",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 4",
-          timestamp: expect.any(Number),
-        },
-      ],
-    });
+    expect(mockPost).toHaveBeenCalledWith("/log/v1", [
+      {
+        logs: [
+          {
+            logtype: "info",
+            message: "Some message 1",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 2",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 3",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 4",
+            timestamp: expect.any(Number),
+          },
+        ],
+      },
+    ]);
   });
 
   test("should batch send immediately if the size limit is breached ", async () => {
@@ -203,26 +205,28 @@ describe("batch mode", () => {
     }
 
     expect(mockPost).toHaveBeenCalledTimes(1);
-    expect(mockPost.mock.calls[0][1].logs).toHaveLength(3);
-    expect(mockPost).toHaveBeenCalledWith("/log/v1", {
-      logs: [
-        {
-          logtype: "info",
-          message: "Some message 1",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 2",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 3",
-          timestamp: expect.any(Number),
-        },
-      ],
-    });
+    expect(mockPost.mock.calls[0][1][0].logs).toHaveLength(3);
+    expect(mockPost).toHaveBeenCalledWith("/log/v1", [
+      {
+        logs: [
+          {
+            logtype: "info",
+            message: "Some message 1",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 2",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 3",
+            timestamp: expect.any(Number),
+          },
+        ],
+      },
+    ]);
 
     await vi.advanceTimersByTimeAsync(500);
     expect(cb).toHaveBeenCalledWith(null);
@@ -230,19 +234,22 @@ describe("batch mode", () => {
     await vi.advanceTimersByTimeAsync(1000);
 
     expect(mockPost).toHaveBeenCalledTimes(2);
-    expect(mockPost).toHaveBeenCalledWith("/log/v1", {
-      logs: [
-        {
-          logtype: "info",
-          message: "Some message 4",
-          timestamp: expect.any(Number),
-        },
-        {
-          logtype: "info",
-          message: "Some message 5",
-          timestamp: expect.any(Number),
-        },
-      ],
-    });
+    expect(mockPost.mock.calls[1][1][0].logs).toHaveLength(2);
+    expect(mockPost).toHaveBeenCalledWith("/log/v1", [
+      {
+        logs: [
+          {
+            logtype: "info",
+            message: "Some message 4",
+            timestamp: expect.any(Number),
+          },
+          {
+            logtype: "info",
+            message: "Some message 5",
+            timestamp: expect.any(Number),
+          },
+        ],
+      },
+    ]);
   });
 });
