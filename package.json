@@ -9,7 +9,7 @@
   "type": "commonjs",
   "private": false,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "prepublish": "tsc",
     "test": "vitest"
   },
