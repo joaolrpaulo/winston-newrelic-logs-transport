@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import TransportStream from "winston-transport";
-import { LEVEL, MESSAGE } from "triple-beam";
 import throttle from "lodash.throttle";
+import cloneDeep from "lodash.clonedeep";
 
 export interface WinstonNewrelicLogsTransportOptions {
   /**
@@ -30,11 +30,7 @@ export interface WinstonNewrelicLogsTransportOptions {
   batchThrottle?: number | true;
 }
 
-interface LogEntry {
-  timestamp: number;
-  message: string;
-  logtype: string;
-}
+type LogDataType = Record<string | symbol, string>;
 
 export const defaultBatchSize = 100;
 export const defaultBatchThrottle = 1000;
@@ -43,15 +39,26 @@ export const defaultBatchThrottle = 1000;
  * Transport for reporting errors to newrelic.
  *
  * @type {WinstonNewrelicLogsTransport}
- * @extends {TransportStream}
+ * @augments {TransportStream}
  */
 export default class WinstonNewrelicLogsTransport extends TransportStream {
   private axiosClient: AxiosInstance;
-  private logs: LogEntry[];
+  private logs: LogDataType[];
   public readonly batchSize?: number;
   public readonly batchThrottle?: number;
   private readonly throttledBatchPost: ReturnType<typeof throttle> | undefined;
 
+  /**
+   * A lot of the implementation seen here is based around the loggly modules for winston.
+   * https://github.com/loggly/winston-loggly-bulk
+   * https://github.com/loggly/node-loggly-bulk
+   */
+
+  /**
+   * Contrusctor for the WinstonNewrelicLogsTransport.
+   *
+   * @param options - Options.
+   */
   constructor(options: WinstonNewrelicLogsTransportOptions) {
     super();
 
@@ -95,6 +102,9 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
     }
   }
 
+  /**
+   * Performs the batch posting operations.
+   */
   private batchPost() {
     try {
       const logs = this.logs.slice();
@@ -121,23 +131,26 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
     }
   }
 
-  public log(
-    info: { [x in symbol]: string },
-    callback: (error?: Error | null) => void
-  ) {
+  /**
+   * Logs data to Newrelic either directly or via batching as configured.
+   *
+   * @param data - Info to log.
+   * @param callback - Logging callback.
+   */
+  public log(data: LogDataType, callback: (error?: Error | null) => void) {
     // The implementation of log callbacks isn't documented and the exported type
     // definitions appear to be wrong too. This implementation has been compied
     // https://github.com/winstonjs/winston-mongodb/blob/master/lib/winston-mongodb.js#L229-L235
     // However I don't know what the second argument for callback is supposed to
     // indicate.
 
-    const entry: LogEntry = {
-      timestamp: Date.now(),
-      message: info[MESSAGE],
-      logtype: info[LEVEL],
-    };
+    const entry = validateData(data);
 
-    if (this.throttledBatchPost) {
+    if (!entry.timestamp) {
+      entry.timestamp = new Date().toISOString();
+    }
+
+    if (this.throttledBatchPost && this.batchSize && this.batchSize > 0) {
       this.logs.push(entry);
       this.throttledBatchPost();
 
@@ -158,5 +171,22 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
           callback(err);
         });
     }
+  }
+}
+
+/**
+ * Checks the incoming meta data and makes it safe for sending.
+ *
+ * @param data - Data to check.
+ * @returns Checked and cloned data.
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function validateData(data: LogDataType): LogDataType {
+  if (data === null) {
+    return {};
+  } else if (typeof data !== "object") {
+    return { metadata: data };
+  } else {
+    return cloneDeep(data);
   }
 }

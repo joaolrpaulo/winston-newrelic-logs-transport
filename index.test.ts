@@ -66,12 +66,13 @@ describe("single mode", () => {
 
     expect(mockPost).toHaveBeenCalledTimes(1);
     expect(mockPost).toHaveBeenCalledWith("/log/v1", {
-      logtype: "info",
-      message: "Some message",
-      timestamp: expect.any(Number),
+      timestamp: expect.any(String),
+      [MESSAGE]: "Some message",
+      [LEVEL]: "info",
     });
 
     await vi.runAllTimersAsync();
+
     expect(cb).toHaveBeenCalledWith(null);
   });
 
@@ -92,6 +93,7 @@ describe("single mode", () => {
     transport.log({ [MESSAGE]: "Some message", [LEVEL]: "info" }, cb);
 
     await vi.advanceTimersByTimeAsync(100);
+
     expect(cb).toHaveBeenCalledWith(err);
     expect(errorEventHandler).toHaveBeenCalledWith(err);
   });
@@ -154,6 +156,7 @@ describe("batch mode", () => {
     expect(mockPost).not.toHaveBeenCalledTimes(1);
 
     await vi.advanceTimersByTimeAsync(500);
+
     expect(cb).toHaveBeenCalledWith(null);
 
     await vi.advanceTimersByTimeAsync(1000);
@@ -163,31 +166,31 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            logtype: "info",
-            message: "Some message 1",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 1",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 2",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 2",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 3",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 3",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 4",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 4",
+            [LEVEL]: "info",
           },
         ],
       },
     ]);
   });
 
-  test("should batch send immediately if the size limit is breached ", async () => {
+  test("should batch send immediately if the size limit is breached", async () => {
     const transport = new WinstonNewrelicLogsTransport({
       apiUrl: "logs.foo.com",
       licenseKey: "000000",
@@ -210,25 +213,26 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            logtype: "info",
-            message: "Some message 1",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 1",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 2",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 2",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 3",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 3",
+            [LEVEL]: "info",
           },
         ],
       },
     ]);
 
     await vi.advanceTimersByTimeAsync(500);
+
     expect(cb).toHaveBeenCalledWith(null);
 
     await vi.advanceTimersByTimeAsync(1000);
@@ -239,14 +243,14 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            logtype: "info",
-            message: "Some message 4",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 4",
+            [LEVEL]: "info",
           },
           {
-            logtype: "info",
-            message: "Some message 5",
-            timestamp: expect.any(Number),
+            timestamp: expect.any(String),
+            [MESSAGE]: "Some message 5",
+            [LEVEL]: "info",
           },
         ],
       },
