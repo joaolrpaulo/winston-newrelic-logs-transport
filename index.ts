@@ -30,7 +30,7 @@ export interface WinstonNewrelicLogsTransportOptions {
   batchThrottle?: number | true;
 }
 
-type LogDataType = Record<string | symbol, string>;
+type LogDataType = Record<string | symbol, string | number>;
 
 export const defaultBatchSize = 100;
 export const defaultBatchThrottle = 1000;
@@ -49,12 +49,6 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
   private readonly throttledBatchPost: ReturnType<typeof throttle> | undefined;
 
   /**
-   * A lot of the implementation seen here is based around the loggly modules for winston.
-   * https://github.com/loggly/winston-loggly-bulk
-   * https://github.com/loggly/node-loggly-bulk
-   */
-
-  /**
    * Contrusctor for the WinstonNewrelicLogsTransport.
    *
    * @param options - Options.
@@ -69,8 +63,8 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
       baseURL: options.apiUrl,
       headers: {
         ...options.axiosOptions?.headers,
-        "Api-Key": options.licenseKey,
-        "Content-Type": "application/json",
+        'Api-Key': options.licenseKey,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -88,10 +82,10 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
           : options.batchThrottle ?? defaultBatchThrottle;
 
       if (this.batchSize <= 0) {
-        throw new Error("Expected a batchSize greater than 0");
+        throw new Error('Expected a batchSize greater than 0');
       }
       if (this.batchThrottle <= 0) {
-        throw new Error("Expected a batchThrottle greater than 0");
+        throw new Error('Expected a batchThrottle greater than 0');
       }
 
       this.throttledBatchPost = throttle(
@@ -117,17 +111,17 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
       ];
 
       this.axiosClient
-        .post("/log/v1", data)
+        .post('/log/v1', data)
         .then(() => {
           for (const log of logs) {
-            this.emit("logged", log);
+            this.emit('logged', log);
           }
         })
         .catch((err) => {
-          this.emit("error", err);
+          this.emit('error', err);
         });
     } catch (err) {
-      this.emit("error", err);
+      this.emit('error', err);
     }
   }
 
@@ -146,8 +140,9 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
 
     const entry = validateData(data);
 
+    // https://docs.newrelic.com/docs/logs/log-api/log-event-data/
     if (!entry.timestamp) {
-      entry.timestamp = new Date().toISOString();
+      entry.timestamp = Date.now();
     }
 
     if (this.throttledBatchPost && this.batchSize && this.batchSize > 0) {
@@ -161,13 +156,13 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
       callback(null);
     } else {
       this.axiosClient
-        .post("/log/v1", entry)
+        .post('/log/v1', entry)
         .then(() => {
-          this.emit("logged", entry);
+          this.emit('logged', entry);
           callback(null);
         })
         .catch((err) => {
-          this.emit("error", err);
+          this.emit('error', err);
           callback(err);
         });
     }
@@ -184,7 +179,7 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
 function validateData(data: LogDataType): LogDataType {
   if (data === null) {
     return {};
-  } else if (typeof data !== "object") {
+  } else if (typeof data !== 'object') {
     return { metadata: data };
   } else {
     return cloneDeep(data);

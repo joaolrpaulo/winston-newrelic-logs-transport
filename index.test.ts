@@ -66,7 +66,7 @@ describe("single mode", () => {
 
     expect(mockPost).toHaveBeenCalledTimes(1);
     expect(mockPost).toHaveBeenCalledWith("/log/v1", {
-      timestamp: expect.any(String),
+      timestamp: expect.any(Number),
       [MESSAGE]: "Some message",
       [LEVEL]: "info",
     });
@@ -166,22 +166,22 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 1",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 2",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 3",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 4",
             [LEVEL]: "info",
           },
@@ -213,17 +213,17 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 1",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 2",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 3",
             [LEVEL]: "info",
           },
@@ -243,12 +243,12 @@ describe("batch mode", () => {
       {
         logs: [
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 4",
             [LEVEL]: "info",
           },
           {
-            timestamp: expect.any(String),
+            timestamp: expect.any(Number),
             [MESSAGE]: "Some message 5",
             [LEVEL]: "info",
           },
