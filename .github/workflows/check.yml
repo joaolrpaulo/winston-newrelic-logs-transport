@@ -11,6 +11,10 @@ jobs:
   test_lint:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [14,16,18]
+
     steps:
       - uses: actions/checkout@v3
 
@@ -21,6 +25,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - run: npm install
-      - run: npm run build --noEmit
-      - run: npm run test
+      - run: yarn install
+      - run: yarn run build --noEmit
+      - run: yarn run test

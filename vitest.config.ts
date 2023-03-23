@@ -6,5 +6,10 @@ export default defineConfig({
       printBasicPrototype: false,
     },
     clearMocks: true,
+    exclude: [
+      // Comment if you want to run the integration tests.
+      '**/*.integration.test.*',
+      'dist/**/*'
+    ]
   },
 });

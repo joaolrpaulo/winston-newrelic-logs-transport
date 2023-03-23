@@ -9,16 +9,20 @@
   "type": "commonjs",
   "private": false,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "prepublish": "tsc",
     "test": "vitest"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.throttle": "^4.1.1",
     "logform": "^2.5.1",
     "winston-transport": "^4.2.0"
   },
   "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.7",
+    "@types/lodash.throttle": "^4.1.7",
     "@types/triple-beam": "^1.3.2",
     "tslint": "^6.1.3",
     "typescript": "^4.9.5",
