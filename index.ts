@@ -3,7 +3,7 @@ import TransportStream from "winston-transport";
 import throttle from "lodash.throttle";
 import cloneDeep from "lodash.clonedeep";
 
-export interface WinstonNewrelicLogsTransportOptions {
+export interface WinstonNewrelicLogsTransportOptions extends TransportStream.TransportStreamOptions {
   /**
    * Your NewRelic key.
    *
@@ -54,7 +54,7 @@ export default class WinstonNewrelicLogsTransport extends TransportStream {
    * @param options - Options.
    */
   constructor(options: WinstonNewrelicLogsTransportOptions) {
-    super();
+    super(options);
 
     this.logs = [];
     this.axiosClient = axios.create({
